@@ -1,0 +1,185 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Calculadora de Pace</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    :root {
+      --bg-light: linear-gradient(-45deg, #0078d4, #00c6ff, #0078d4, #00c6ff);
+      --bg-dark: linear-gradient(-45deg, #1a1a1a, #333333, #1a1a1a, #333333);
+      --text-light: #333;
+      --text-dark: #f0f0f0;
+      --container-bg-light: rgba(255, 255, 255, 0.95);
+      --container-bg-dark: rgba(0, 0, 0, 0.85);
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: var(--bg-light);
+      background-size: 400% 400%;
+      animation: gradientBG 15s ease infinite;
+      transition: background 0.5s ease;
+    }
+
+    @keyframes gradientBG {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .container {
+      background: var(--container-bg-light);
+      padding: 40px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      text-align: center;
+      width: 100%;
+      max-width: 400px;
+      color: var(--text-light);
+      transition: background 0.5s ease, color 0.5s ease;
+    }
+
+    .dark-mode body {
+      background: var(--bg-dark);
+    }
+
+    .dark-mode .container {
+      background: var(--container-bg-dark);
+      color: var(--text-dark);
+    }
+
+    h1 {
+      margin-bottom: 24px;
+      transition: color 0.5s ease;
+    }
+
+    label {
+      display: block;
+      margin-top: 16px;
+      font-weight: bold;
+      transition: color 0.5s ease;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      font-size: 16px;
+      margin-top: 8px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+    }
+
+    input:invalid {
+      border-color: red;
+    }
+
+    button {
+      margin-top: 24px;
+      padding: 12px 24px;
+      font-size: 16px;
+      background-color: #0078d4;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #005fa3;
+    }
+
+    #resultado {
+      margin-top: 24px;
+      font-size: 18px;
+      font-weight: bold;
+      transition: color 0.5s ease;
+    }
+
+    .btn-group {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    @media (max-width: 480px) {
+      .container {
+        padding: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container" id="container">
+    <h1>Calculadora de Pace</h1>
+    <label for="distancia">Distância (km):</label>
+    <input type="number" id="distancia" step="0.01" min="0">
+
+    <label for="minutos">Minutos:</label>
+    <input type="number" id="minutos" min="0">
+
+    <label for="segundos">Segundos (opcional):</label>
+    <input type="number" id="segundos" min="0" placeholder="0">
+
+    <div class="btn-group">
+      <button onclick="calcularPace()">Calcular</button>
+      <button onclick="limparCampos()">Limpar</button>
+    </div>
+
+    <div class="btn-group">
+      <button onclick="alternarModo()">Alternar Tema</button>
+    </div>
+
+    <div id="resultado"></div>
+  </div>
+
+  <script>
+    let modoEscuro = false;
+
+    function calcularPace() {
+      const distancia = parseFloat(document.getElementById('distancia').value);
+      const minutos = parseInt(document.getElementById('minutos').value);
+      const segundosInput = document.getElementById('segundos').value;
+      const segundos = segundosInput === "" ? 0 : parseInt(segundosInput);
+
+      if (
+        isNaN(distancia) || isNaN(minutos) || isNaN(segundos) ||
+        distancia <= 0 || minutos < 0 || segundos < 0
+      ) {
+        document.getElementById('resultado').innerText = "Por favor, insira valores válidos (sem negativos).";
+        return;
+      }
+
+      const tempoTotalMinutos = minutos + segundos / 60;
+      const paceMinutos = tempoTotalMinutos / distancia;
+      const paceMin = Math.floor(paceMinutos);
+      const paceSeg = Math.round((paceMinutos - paceMin) * 60);
+
+      document.getElementById('resultado').innerText = 
+        `Pace: ${paceMin}m ${paceSeg < 10 ? '0' + paceSeg : paceSeg}s por km`;
+    }
+
+    function limparCampos() {
+      document.getElementById('distancia').value = "";
+      document.getElementById('minutos').value = "";
+      document.getElementById('segundos').value = "";
+      document.getElementById('resultado').innerText = "";
+    }
+
+    function alternarModo() {
+      modoEscuro = !modoEscuro;
+      document.body.classList.toggle("dark-mode", modoEscuro);
+    }
+  </script>
+</body>
+</html>
