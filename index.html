@@ -7,26 +7,26 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     :root {
-      --bg-light: linear-gradient(-45deg, #0078d4, #00c6ff, #0078d4, #00c6ff);
-      --bg-dark: linear-gradient(-45deg, #1a1a1a, #333333, #1a1a1a, #333333);
+      --bg-light: #f0f4f8;
+      --bg-dark: #1e1e1e;
       --text-light: #333;
       --text-dark: #f0f0f0;
-      --container-bg-light: rgba(255, 255, 255, 0.95);
-      --container-bg-dark: rgba(0, 0, 0, 0.85);
+      --primary: #0078d4;
+      --primary-dark: #005fa3;
     }
 
     body {
       margin: 0;
       padding: 0;
-      height: 100vh;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(-45deg, #0078d4, #00c6ff, #0078d4, #00c6ff);
+      background-size: 400% 400%;
+      animation: gradientBG 15s ease infinite;
       display: flex;
       justify-content: center;
       align-items: center;
-      background: var(--bg-light);
-      background-size: 400% 400%;
-      animation: gradientBG 15s ease infinite;
-      transition: background 0.5s ease;
+      min-height: 100vh;
+      transition: background 0.3s ease;
     }
 
     @keyframes gradientBG {
@@ -36,46 +36,41 @@
     }
 
     .container {
-      background: var(--container-bg-light);
-      padding: 40px;
+      background: rgba(255, 255, 255, 0.95);
+      padding: 30px 20px;
       border-radius: 12px;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
       text-align: center;
-      width: 100%;
+      width: 90%;
       max-width: 400px;
       color: var(--text-light);
-      transition: background 0.5s ease, color 0.5s ease;
-    }
-
-    .dark-mode body {
-      background: var(--bg-dark);
     }
 
     .dark-mode .container {
-      background: var(--container-bg-dark);
+      background: rgba(30, 30, 30, 0.95);
       color: var(--text-dark);
     }
 
     h1 {
-      margin-bottom: 24px;
-      transition: color 0.5s ease;
+      margin-bottom: 20px;
+      font-size: 1.8em;
     }
 
     label {
       display: block;
       margin-top: 16px;
       font-weight: bold;
-      transition: color 0.5s ease;
+      text-align: left;
     }
 
     input {
       width: 100%;
-      padding: 12px;
+      padding: 14px;
       font-size: 16px;
-      margin-top: 8px;
+      margin-top: 6px;
       border: 1px solid #ccc;
       border-radius: 8px;
-      transition: all 0.3s ease;
+      box-sizing: border-box;
     }
 
     input:invalid {
@@ -83,44 +78,61 @@
     }
 
     button {
-      margin-top: 24px;
-      padding: 12px 24px;
+      margin-top: 20px;
+      padding: 14px;
       font-size: 16px;
-      background-color: #0078d4;
+      background-color: var(--primary);
       color: white;
       border: none;
       border-radius: 8px;
       cursor: pointer;
+      width: 100%;
       transition: background-color 0.3s ease;
     }
 
     button:hover {
-      background-color: #005fa3;
+      background-color: var(--primary-dark);
     }
 
     #resultado {
-      margin-top: 24px;
+      margin-top: 20px;
       font-size: 18px;
       font-weight: bold;
-      transition: color 0.5s ease;
+      color: var(--primary);
     }
 
-    .btn-group {
-      display: flex;
-      justify-content: space-between;
-      gap: 10px;
-      margin-top: 16px;
+    .dark-mode #resultado {
+      color: #00c6ff;
+    }
+
+    .toggle-mode {
+      margin-top: 20px;
+      font-size: 14px;
+      background: none;
+      border: none;
+      color: var(--primary);
+      cursor: pointer;
+      text-decoration: underline;
     }
 
     @media (max-width: 480px) {
       .container {
-        padding: 20px;
+        padding: 20px 15px;
+      }
+
+      h1 {
+        font-size: 1.5em;
+      }
+
+      input, button {
+        font-size: 15px;
+        padding: 12px;
       }
     }
   </style>
 </head>
 <body>
-  <div class="container" id="container">
+  <div class="container">
     <h1>Calculadora de Pace</h1>
     <label for="distancia">Distância (km):</label>
     <input type="number" id="distancia" step="0.01" min="0">
@@ -131,21 +143,13 @@
     <label for="segundos">Segundos (opcional):</label>
     <input type="number" id="segundos" min="0" placeholder="0">
 
-    <div class="btn-group">
-      <button onclick="calcularPace()">Calcular</button>
-      <button onclick="limparCampos()">Limpar</button>
-    </div>
-
-    <div class="btn-group">
-      <button onclick="alternarModo()">Alternar Tema</button>
-    </div>
-
+    <button onclick="calcularPace()">Calcular Pace</button>
+    <button onclick="limparCampos()">Limpar Campos</button>
     <div id="resultado"></div>
+    <button class="toggle-mode" onclick="alternarModo()">Alternar modo escuro/claro</button>
   </div>
 
   <script>
-    let modoEscuro = false;
-
     function calcularPace() {
       const distancia = parseFloat(document.getElementById('distancia').value);
       const minutos = parseInt(document.getElementById('minutos').value);
@@ -177,8 +181,7 @@
     }
 
     function alternarModo() {
-      modoEscuro = !modoEscuro;
-      document.body.classList.toggle("dark-mode", modoEscuro);
+      document.body.classList.toggle("dark-mode");
     }
   </script>
 </body>
